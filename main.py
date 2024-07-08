@@ -13,13 +13,21 @@ def fetch_daily_problem():
         return data
     return None
 
+
+
 def run():
     intents = discord.Intents.default()
+    intents.message_content = True
     bot = commands.Bot(command_prefix='!', intents=intents)
 
     @bot.event
     async def on_ready():
         logger.info(f"User: {bot.user}")
+
+    @bot.command()
+    async def problem(ctx):
+        problem_data = fetch_daily_problem()
+        await ctx.send(problem_data["questionLink"])
 
     bot.run(settings.TOKEN, root_logger=True)
 
