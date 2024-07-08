@@ -13,8 +13,6 @@ def fetch_daily_problem():
         return data
     return None
 
-
-
 def run():
     intents = discord.Intents.default()
     intents.message_content = True
@@ -25,9 +23,20 @@ def run():
         logger.info(f"User: {bot.user}")
 
     @bot.command()
-    async def problem(ctx):
+    async def daily(ctx):
+        """Posts Daily Question"""
         problem_data = fetch_daily_problem()
-        await ctx.send(problem_data["questionLink"])
+
+        if problem_data:
+            problem_title = problem_data['questionTitle']
+            problem_link = problem_data['questionLink']
+            message = f"# Today's LeetCode Daily Problem:\n\n**{problem_title}**\n{problem_link}\n\nGood Luck! (Don't post your solutions without a spoiler!)"
+
+        else:
+            message = "# Error procuring todays problem\nTry again later :("
+
+        await ctx.send(message)
+
 
     bot.run(settings.TOKEN, root_logger=True)
 
